@@ -30,7 +30,7 @@ spring.social.twitter.appSecret=<appId>
 
 4. Run the application 
 ```
-mvn spring-boot:run [-Dtwitter.search="springsource"]
+mvn spring-boot:run [-Dgm.twitter.search="springsource"]
 ```
 
 **NOTE** By default there is default neo4j cypher is provided
@@ -47,9 +47,8 @@ To find trending tweets use API:
 ```
 http://localhost:5050/tweets/trend
 ```
-All set to run the twitter trend APIS
 
-neo4j will depicts graphs as:
+neo4j will depicts tweets in graphs as:
 
   ![alt text](./neo4j.png)
 
