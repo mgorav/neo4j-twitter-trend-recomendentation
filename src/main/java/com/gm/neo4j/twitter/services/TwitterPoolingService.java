@@ -45,7 +45,7 @@ public class TwitterPoolingService {
         return importTweets(search, null);
     }
 
-    @Scheduled(initialDelay = 10 * 1000, fixedRate = 60 * 1000)
+    @Scheduled(initialDelay = 10 * 1000, fixedRate = 30 * 1000)
     public void importTweets() {
         String search = System.getProperty("twitter.search", SEARCH);
         if (log.isInfoEnabled()) log.info("Importing Tweets for " + search);
