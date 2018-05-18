@@ -11,7 +11,6 @@ import org.apache.commons.logging.LogFactory;
 import org.neo4j.ogm.session.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.social.twitter.api.*;
 import org.springframework.social.twitter.api.impl.TwitterTemplate;
 import org.springframework.stereotype.Service;
@@ -71,7 +70,7 @@ public class TwitterService {
     public TweetMessage importTweet(Tweet source) {
         TweetUser tweetUser = tweetUserRepository.save(new TweetUser(source.getUser()));
         final String text = source.getText();
-        final TweetMessage tweetMessage = new TweetMessage(source.getId(), tweetUser, text);
+        final TweetMessage tweetMessage = new TweetMessage(source.getId(), tweetUser, text,source.getCreatedAt(),source.getLanguageCode());
         if (log.isInfoEnabled()) {
             log.info("Imported " + tweetMessage);
         }

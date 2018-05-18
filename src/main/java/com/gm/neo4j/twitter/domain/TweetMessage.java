@@ -6,6 +6,7 @@ import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,6 +22,10 @@ public class TweetMessage {
 
     String text;
 
+    Date createdAt;
+
+    String languageCode;
+
     @Relationship(type = "POSTED", direction = INCOMING)
     TweetUser poster;
     @Relationship(type = "TAGGED")
@@ -33,7 +38,7 @@ public class TweetMessage {
     public TweetMessage() {
     }
 
-    public TweetMessage(long tweetId, TweetUser poster, String text) {
+    public TweetMessage(long tweetId, TweetUser poster, String text,Date createdAt,String languageCode) {
         this.tweetId = tweetId;
         this.poster = poster;
         this.text = text;
@@ -53,11 +58,6 @@ public class TweetMessage {
 
     public TweetUser getPoster() {
         return poster;
-    }
-
-    @Override
-    public String toString() {
-        return "Tweet " + tweetId + ": " + text + " by " + poster;
     }
 
     public Set<TweetUser> getMentions() {
@@ -82,5 +82,30 @@ public class TweetMessage {
 
     public String getText() {
         return text;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public String getLanguageCode() {
+        return languageCode;
+    }
+
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("TweetMessage{");
+        sb.append("id=").append(id);
+        sb.append(", tweetId=").append(tweetId);
+        sb.append(", text='").append(text).append('\'');
+        sb.append(", createdAt=").append(createdAt);
+        sb.append(", languageCode='").append(languageCode).append('\'');
+        sb.append(", poster=").append(poster);
+        sb.append(", tags=").append(tags);
+        sb.append(", mentions=").append(mentions);
+        sb.append(", source=").append(source);
+        sb.append('}');
+        return sb.toString();
     }
 }
