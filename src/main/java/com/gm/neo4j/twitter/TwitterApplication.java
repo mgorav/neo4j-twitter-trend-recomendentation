@@ -1,39 +1,54 @@
 
 package com.gm.neo4j.twitter;
 
+import com.gm.neo4j.twitter.repositories.TweetRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.social.TwitterAutoConfiguration;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.data.neo4j.repository.config.EnableNeo4jRepositories;
-import org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.social.twitter.api.impl.TwitterTemplate;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import java.io.IOException;
 
-@EnableNeo4jRepositories(basePackages = "org.neo4j.twitter_graph.repositories")
+@EnableNeo4jRepositories(basePackageClasses = TweetRepository.class)
 @EnableTransactionManagement
-@Import(RepositoryRestMvcConfiguration.class)
 @EnableScheduling
 @Configuration
-@EnableAutoConfiguration
-@ComponentScan(basePackages = {"org.neo4j.twitter_graph.services"})
+@EnableAutoConfiguration(exclude = TwitterAutoConfiguration.class)
+@ComponentScan("com.gm.neo4j.twitter")
+@ConfigurationProperties(prefix = "spring.social.twitter")
 public class TwitterApplication {
-
-    public static final String URL = "http://localhost:7474/db/data/";
-
+    private String appId;
+    private String appSecret;
 
     @Bean
     public TwitterTemplate twitterTemplate() {
-        return new TwitterTemplate(System.getenv("TWITTER_BEARER"));
+        return new TwitterTemplate(appId, appSecret);
     }
-
 
     public static void main(String[] args) throws IOException {
         SpringApplication.run(TwitterApplication.class, args);
+    }
+
+    public String getAppId() {
+        return appId;
+    }
+
+    public void setAppId(String appId) {
+        this.appId = appId;
+    }
+
+    public String getAppSecret() {
+        return appSecret;
+    }
+
+    public void setAppSecret(String appSecret) {
+        this.appSecret = appSecret;
     }
 }

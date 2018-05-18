@@ -7,3 +7,4 @@ target
 .DS_Store
 twitter.db
 *.save
+/src/main/resources/application.properties_bak

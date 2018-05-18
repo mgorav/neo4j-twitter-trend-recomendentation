@@ -5,11 +5,10 @@ import com.gm.neo4j.twitter.domain.Tweet;
 import com.gm.neo4j.twitter.domain.User;
 import com.gm.neo4j.twitter.repositories.TagRepository;
 import com.gm.neo4j.twitter.repositories.TweetRepository;
+import com.gm.neo4j.twitter.repositories.UserRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.neo4j.ogm.session.Session;
-import com.gm.neo4j.twitter.repositories.UserRepository;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.social.twitter.api.HashTagEntity;
@@ -20,13 +19,17 @@ import org.springframework.social.twitter.api.impl.TwitterTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+
+import static java.util.Collections.EMPTY_MAP;
 
 @Service
 @Transactional
-public class TwitterService implements InitializingBean {
-    private final static Log log = LogFactory.getLog(TwitterService.class);
+public class TweetPoolingService {
+    private final static Log log = LogFactory.getLog(TweetPoolingService.class);
 
     public static final String SEARCH = "#neo4j OR \"graph OR database\" OR \"graph OR databases\" OR graphdb OR graphconnect OR @neoquestions OR @Neo4jDE OR @Neo4jFr OR neotechnology OR springsource OR @SpringData OR pivotal OR @starbuxman OR @mesirii OR @springcentral";
     @Autowired
@@ -37,29 +40,29 @@ public class TwitterService implements InitializingBean {
     TweetRepository tweetRepository;
 
     @Autowired
-    Session template;
+    Session session;
 
     @Autowired
     TwitterTemplate twitterTemplate;
 
     public List<Tweet> importTweets(String search) {
-        return importTweets(search,null);
+        return importTweets(search, null);
     }
 
-    @Scheduled(initialDelay = 10*1000,fixedRate = 60*1000)
+    @Scheduled(initialDelay = 10 * 1000, fixedRate = 60 * 1000)
     public void importTweets() {
         String search = System.getProperty("twitter.search", SEARCH);
-        if (log.isInfoEnabled()) log.info("Importing Tweets for "+search);
+        if (log.isInfoEnabled()) log.info("Importing Tweets for " + search);
         importTweets(search);
     }
 
 
     public List<Tweet> importTweets(String search, Long lastTweetId) {
-        if (log.isInfoEnabled()) log.info("Importing for " +search+ ", max tweet id: "+lastTweetId);
+        if (log.isInfoEnabled()) log.info("Importing for " + search + ", max tweet id: " + lastTweetId);
 
         final SearchOperations searchOperations = twitterTemplate.searchOperations();
-        
-        final SearchResults results = lastTweetId==null ? searchOperations.search(search,200) : searchOperations.search(search,200,lastTweetId,Long.MAX_VALUE);
+
+        final SearchResults results = lastTweetId == null ? searchOperations.search(search, 200) : searchOperations.search(search, 200, lastTweetId, Long.MAX_VALUE);
 
         final List<Tweet> result = new ArrayList<Tweet>();
         for (org.springframework.social.twitter.api.Tweet tweet : results.getTweets()) {
@@ -81,7 +84,7 @@ public class TwitterService implements InitializingBean {
 
     private void addMentions(Tweet tweet, List<MentionEntity> mentions) {
         for (MentionEntity mention : mentions) {
-            tweet.addMention(userRepository.save(new User(mention.getId(),mention.getName(),mention.getScreenName())));
+            tweet.addMention(userRepository.save(new User(mention.getId(), mention.getName(), mention.getScreenName())));
         }
     }
 
@@ -91,8 +94,8 @@ public class TwitterService implements InitializingBean {
         }
     }
 
-    @Override
+    @PostConstruct
     public void afterPropertiesSet() throws Exception {
-        template.query("MATCH (n) OPTIONAL MATCH (n)-[r]-() DELETE n,r",null);
+        session.query("MATCH (n) OPTIONAL MATCH (n)-[r]-() DELETE n,r", EMPTY_MAP);
     }
 }
