@@ -57,13 +57,17 @@ public class TwitterPollingService {
     @Scheduled(initialDelay = 10 * 1000, fixedRate = 30 * 1000)
     public void scheduleImportTweets() {
         String search = System.getProperty("gm.twitter.search", TWITTER_SEARCH);
-        if (log.isInfoEnabled()) log.info("Importing Tweets for " + search);
+        if (log.isInfoEnabled()) {
+            log.info("Importing Tweets for " + search);
+        }
         searchAndImportTweetsInTwitter(search);
     }
 
 
     public List<TweetMessage> searchAndImportTweetsInTwitter(String search, Long lastTweetId) {
-        if (log.isInfoEnabled()) log.info("Importing for " + search + ", max tweet id: " + lastTweetId);
+        if (log.isInfoEnabled()) {
+            log.info("Importing for " + search + ", max tweet id: " + lastTweetId);
+        }
 
         final SearchResults results = getSearchResults(search, lastTweetId);
 
@@ -81,7 +85,9 @@ public class TwitterPollingService {
         TweetUser tweetUser = tweetUserRepository.save(new TweetUser(source.getUser()));
         final String text = source.getText();
         final TweetMessage tweetMessage = new TweetMessage(source.getId(), tweetUser, text);
-        if (log.isInfoEnabled()) log.info("Imported " + tweetMessage);
+        if (log.isInfoEnabled()) {
+            log.info("Imported " + tweetMessage);
+        }
         addMentions(tweetMessage, source.getEntities().getMentions());
         addTags(tweetMessage, source.getEntities().getHashTags());
         return tweetMessageRepository.save(tweetMessage);
