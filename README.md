@@ -43,6 +43,10 @@ http://localhost:5050/tags
  http://localhost:5050/users/search/
 ```
 
+To find trending tweets use API:
+```
+http://localhost:5050/tweets/trend
+```
 All set to run the twitter trend APIS
 
 neo4j will depicts graphs as:

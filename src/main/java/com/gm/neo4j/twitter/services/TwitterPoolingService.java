@@ -27,7 +27,7 @@ import static java.util.Collections.EMPTY_MAP;
 public class TwitterPoolingService {
     private final static Log log = LogFactory.getLog(TwitterPoolingService.class);
 
-    public static String SEARCH = "#neo4j OR \"graph OR database\" OR \"graph OR databases\" OR graphdb OR graphconnect OR @neoquestions OR @Neo4jDE OR @Neo4jFr OR neotechnology OR springsource OR @SpringData OR pivotal OR @starbuxman OR @mesirii OR @springcentral";
+    public String SEARCH = "#neo4j OR \"graph OR database\" OR \"graph OR databases\" OR graphdb OR graphconnect OR @neoquestions OR @Neo4jDE OR @Neo4jFr OR neotechnology OR springsource OR @SpringData OR pivotal OR @starbuxman OR @mesirii OR @springcentral";
     @Autowired
     TweetUserRepository tweetUserRepository;
     @Autowired
@@ -42,6 +42,10 @@ public class TwitterPoolingService {
     TwitterTemplate twitterTemplate;
 
     public List<TweetMessage> searchTweets(String search) {
+        // NOT elegant
+        synchronized (this) {
+            SEARCH = search;
+        }
         return searchTweets(search, null);
     }
 
@@ -91,7 +95,7 @@ public class TwitterPoolingService {
     }
 
     @PostConstruct
-    public void afterPropertiesSet() throws Exception {
+    public void postConstruct() {
         session.query("MATCH (n) OPTIONAL MATCH (n)-[r]-() DELETE n,r", EMPTY_MAP);
     }
 }
