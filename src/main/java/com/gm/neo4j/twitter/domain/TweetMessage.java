@@ -16,16 +16,19 @@ public class TweetMessage {
     @GraphId
     Long id;
 
-    @Index(unique=true) Long tweetId;
+    @Index(unique = true)
+    Long tweetId;
 
     String text;
 
-     @Relationship(type="POSTED", direction = INCOMING)
-     TweetUser poster;
-     @Relationship(type="TAGGED")   Collection<TweetTag> tags=new HashSet<TweetTag>();
-     @Relationship(type="MENTIONS") Set<TweetUser> mentions=new HashSet<TweetUser>();
-     @Relationship(type="SOURCE")
-     TweetMessage source;
+    @Relationship(type = "POSTED", direction = INCOMING)
+    TweetUser poster;
+    @Relationship(type = "TAGGED")
+    Collection<TweetTag> tags = new HashSet<TweetTag>();
+    @Relationship(type = "MENTIONS")
+    Set<TweetUser> mentions = new HashSet<TweetUser>();
+    @Relationship(type = "SOURCE")
+    TweetMessage source;
 
     public TweetMessage() {
     }
@@ -39,6 +42,7 @@ public class TweetMessage {
     public void addMention(TweetUser mention) {
         this.mentions.add(mention);
     }
+
     public Long getId() {
         return id;
     }
@@ -68,12 +72,12 @@ public class TweetMessage {
         tags.add(tag);
     }
 
-    public void setSource(TweetMessage source) {
-        this.source = source;
-    }
-
     public TweetMessage getSource() {
         return source;
+    }
+
+    public void setSource(TweetMessage source) {
+        this.source = source;
     }
 
     public String getText() {

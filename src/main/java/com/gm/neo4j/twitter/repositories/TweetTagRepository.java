@@ -5,5 +5,5 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 @RepositoryRestResource(collectionResourceRel = "tags", path = "tags")
-public interface TweetTagRepository extends PagingAndSortingRepository<TweetTag,Long> {
+public interface TweetTagRepository extends PagingAndSortingRepository<TweetTag, Long> {
 }

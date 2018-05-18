@@ -47,6 +47,9 @@ public class TweetUser {
         this.user = screenName;
     }
 
+    public TweetUser() {
+    }
+
     public Long getId() {
         return id;
     }
@@ -90,8 +93,5 @@ public class TweetUser {
     @Override
     public String toString() {
         return "@" + user;
-    }
-
-    public TweetUser() {
     }
 }

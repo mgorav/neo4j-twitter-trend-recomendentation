@@ -1,4 +1,3 @@
-
 package com.gm.neo4j.twitter;
 
 import com.gm.neo4j.twitter.repositories.TweetMessageRepository;
@@ -27,13 +26,13 @@ public class TwitterApplication {
     private String appId;
     private String appSecret;
 
+    public static void main(String[] args) throws IOException {
+        SpringApplication.run(TwitterApplication.class, args);
+    }
+
     @Bean
     public TwitterTemplate twitterTemplate() {
         return new TwitterTemplate(appId, appSecret);
-    }
-
-    public static void main(String[] args) throws IOException {
-        SpringApplication.run(TwitterApplication.class, args);
     }
 
     public String getAppId() {
