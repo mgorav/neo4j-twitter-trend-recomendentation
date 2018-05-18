@@ -20,10 +20,25 @@ http://localhost:7474/
 ```    
 2. Specify following properties in application.properties file
 ```
-spring.data.neo4j.username=neo4j
-spring.data.neo4j.password=<passWord>
-spring.social.twitter.appId=<appId>  
-spring.social.twitter.appSecret=<appId>
+#
+# neo4j properties
+spring.data.neo4j.username=yoursusername
+spring.data.neo4j.password=yourspassword
+#
+# application port
+server.port=5050
+#
+# Twitter credentials
+spring.social.twitter.appId=yoursappid
+spring.social.twitter.appSecret=yoursappsecret
+
+spring.social.twitter.accessToken=yoursaccesstoken
+spring.social.twitter.accessTokenSecret=yoursaccesstokensecret
+
+#
+# If true, will start gathering live stream for analytics and scheduled based on -Dgm.twitter.search
+# will not occur
+gm.twitter.live.stream=false
 ```
 
 **NOTE** Create twitter consumerKey (spring.social.twitter.appId) and consumerSecret (spring.social.twitter.appSecret)
