@@ -1,20 +1,17 @@
 package com.gm.neo4j.twitter.services;
 
-import com.gm.neo4j.twitter.domain.TweetTag;
 import com.gm.neo4j.twitter.domain.TweetMessage;
+import com.gm.neo4j.twitter.domain.TweetTag;
 import com.gm.neo4j.twitter.domain.TweetUser;
-import com.gm.neo4j.twitter.repositories.TweetTagRepository;
 import com.gm.neo4j.twitter.repositories.TweetMessageRepository;
+import com.gm.neo4j.twitter.repositories.TweetTagRepository;
 import com.gm.neo4j.twitter.repositories.TweetUserRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.neo4j.ogm.session.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.social.twitter.api.HashTagEntity;
-import org.springframework.social.twitter.api.MentionEntity;
-import org.springframework.social.twitter.api.SearchOperations;
-import org.springframework.social.twitter.api.SearchResults;
+import org.springframework.social.twitter.api.*;
 import org.springframework.social.twitter.api.impl.TwitterTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -64,13 +61,13 @@ public class TwitterPoolingService {
         final SearchResults results = lastTweetId == null ? searchOperations.search(search, 200) : searchOperations.search(search, 200, lastTweetId, Long.MAX_VALUE);
 
         final List<TweetMessage> result = new ArrayList<TweetMessage>();
-        for (org.springframework.social.twitter.api.Tweet tweet : results.getTweets()) {
+        for (Tweet tweet : results.getTweets()) {
             result.add(importTweet(tweet));
         }
         return result;
     }
 
-    protected TweetMessage importTweet(org.springframework.social.twitter.api.Tweet source) {
+    protected TweetMessage importTweet(Tweet source) {
         TweetUser tweetUser = tweetUserRepository.save(new TweetUser(source.getUser()));
         final String text = source.getText();
         final TweetMessage tweetMessage = new TweetMessage(source.getId(), tweetUser, text);
