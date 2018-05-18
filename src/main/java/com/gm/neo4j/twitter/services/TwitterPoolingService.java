@@ -41,19 +41,19 @@ public class TwitterPoolingService {
     @Autowired
     TwitterTemplate twitterTemplate;
 
-    public List<TweetMessage> importTweets(String search) {
-        return importTweets(search, null);
+    public List<TweetMessage> searchTweets(String search) {
+        return searchTweets(search, null);
     }
 
     @Scheduled(initialDelay = 10 * 1000, fixedRate = 30 * 1000)
-    public void importTweets() {
+    public void searchTweets() {
         String search = System.getProperty("twitter.search", SEARCH);
         if (log.isInfoEnabled()) log.info("Importing Tweets for " + search);
-        importTweets(search);
+        searchTweets(search);
     }
 
 
-    public List<TweetMessage> importTweets(String search, Long lastTweetId) {
+    public List<TweetMessage> searchTweets(String search, Long lastTweetId) {
         if (log.isInfoEnabled()) log.info("Importing for " + search + ", max tweet id: " + lastTweetId);
 
         final SearchOperations searchOperations = twitterTemplate.searchOperations();
