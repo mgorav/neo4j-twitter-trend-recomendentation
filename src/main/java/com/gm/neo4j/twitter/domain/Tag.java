@@ -4,10 +4,6 @@ import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.Index;
 import org.neo4j.ogm.annotation.NodeEntity;
 
-/**
- * @author mh
- * @since 24.07.12
- */
 @NodeEntity
 public class Tag {
     @Id

@@ -6,10 +6,6 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 import java.util.Collection;
 
-/**
- * @author mh
- * @since 24.07.12
- */
 @RepositoryRestResource(collectionResourceRel = "tweets", path = "tweets")
 public interface TweetRepository extends PagingAndSortingRepository<Tweet, Long> {
     Tweet findByTweetId(Long id);

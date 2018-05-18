@@ -23,10 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author mh
- * @since 24.07.12
- */
 @Service
 @Transactional
 public class TwitterService implements InitializingBean {
