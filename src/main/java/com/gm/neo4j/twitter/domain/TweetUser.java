@@ -8,7 +8,7 @@ import org.springframework.social.twitter.api.TwitterProfile;
 import java.util.Date;
 
 @NodeEntity
-public class User {
+public class TweetUser {
     @GraphId
     Long id;
 
@@ -25,11 +25,11 @@ public class User {
     private String image;
     private String language;
 
-    public User(long userId) {
+    public TweetUser(long userId) {
         this.userId = userId;
     }
 
-    public User(TwitterProfile user) {
+    public TweetUser(TwitterProfile user) {
         this.userId = user.getId();
         this.user = user.getScreenName();
         this.name = user.getName();
@@ -41,7 +41,7 @@ public class User {
         language = user.getLanguage();
     }
 
-    public User(long id, String name, String screenName) {
+    public TweetUser(long id, String name, String screenName) {
         this.userId = id;
         this.name = name;
         this.user = screenName;
@@ -92,6 +92,6 @@ public class User {
         return "@" + user;
     }
 
-    public User() {
+    public TweetUser() {
     }
 }

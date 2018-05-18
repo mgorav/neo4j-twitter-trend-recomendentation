@@ -1,7 +1,7 @@
 
 package com.gm.neo4j.twitter;
 
-import com.gm.neo4j.twitter.repositories.TweetRepository;
+import com.gm.neo4j.twitter.repositories.TweetMessageRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.social.TwitterAutoConfiguration;
@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import java.io.IOException;
 
-@EnableNeo4jRepositories(basePackageClasses = TweetRepository.class)
+@EnableNeo4jRepositories(basePackageClasses = TweetMessageRepository.class)
 @EnableTransactionManagement
 @EnableScheduling
 @Configuration

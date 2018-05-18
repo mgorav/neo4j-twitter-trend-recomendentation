@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @NodeEntity
-public class Tweet {
+public class TweetMessage {
     @GraphId
     Long id;
 
@@ -18,21 +18,23 @@ public class Tweet {
 
     String text;
 
-     @Relationship(type="POSTED", direction = Relationship.INCOMING) User poster;
-     @Relationship(type="TAGGED")   Collection<Tag> tags=new HashSet<Tag>();
-     @Relationship(type="MENTIONS") Set<User> mentions=new HashSet<User>();
-     @Relationship(type="SOURCE")   Tweet source;
+     @Relationship(type="POSTED", direction = Relationship.INCOMING)
+     TweetUser poster;
+     @Relationship(type="TAGGED")   Collection<TweetTag> tags=new HashSet<TweetTag>();
+     @Relationship(type="MENTIONS") Set<TweetUser> mentions=new HashSet<TweetUser>();
+     @Relationship(type="SOURCE")
+     TweetMessage source;
 
-    public Tweet() {
+    public TweetMessage() {
     }
 
-    public Tweet(long tweetId, User poster, String text) {
+    public TweetMessage(long tweetId, TweetUser poster, String text) {
         this.tweetId = tweetId;
         this.poster = poster;
         this.text = text;
     }
 
-    public void addMention(User mention) {
+    public void addMention(TweetUser mention) {
         this.mentions.add(mention);
     }
     public Long getId() {
@@ -43,7 +45,7 @@ public class Tweet {
         return tweetId;
     }
 
-    public User getPoster() {
+    public TweetUser getPoster() {
         return poster;
     }
 
@@ -52,23 +54,23 @@ public class Tweet {
         return "Tweet " + tweetId + ": " + text + " by " + poster;
     }
 
-    public Set<User> getMentions() {
+    public Set<TweetUser> getMentions() {
         return mentions;
     }
 
-    public Collection<Tag> getTags() {
+    public Collection<TweetTag> getTags() {
         return tags;
     }
 
-    public void addTag(Tag tag) {
+    public void addTag(TweetTag tag) {
         tags.add(tag);
     }
 
-    public void setSource(Tweet source) {
+    public void setSource(TweetMessage source) {
         this.source = source;
     }
 
-    public Tweet getSource() {
+    public TweetMessage getSource() {
         return source;
     }
 

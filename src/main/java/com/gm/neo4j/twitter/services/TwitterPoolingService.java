@@ -1,11 +1,11 @@
 package com.gm.neo4j.twitter.services;
 
-import com.gm.neo4j.twitter.domain.Tag;
-import com.gm.neo4j.twitter.domain.Tweet;
-import com.gm.neo4j.twitter.domain.User;
-import com.gm.neo4j.twitter.repositories.TagRepository;
-import com.gm.neo4j.twitter.repositories.TweetRepository;
-import com.gm.neo4j.twitter.repositories.UserRepository;
+import com.gm.neo4j.twitter.domain.TweetTag;
+import com.gm.neo4j.twitter.domain.TweetMessage;
+import com.gm.neo4j.twitter.domain.TweetUser;
+import com.gm.neo4j.twitter.repositories.TweetTagRepository;
+import com.gm.neo4j.twitter.repositories.TweetMessageRepository;
+import com.gm.neo4j.twitter.repositories.TweetUserRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.neo4j.ogm.session.Session;
@@ -27,16 +27,16 @@ import static java.util.Collections.EMPTY_MAP;
 
 @Service
 @Transactional
-public class TweetPoolingService {
-    private final static Log log = LogFactory.getLog(TweetPoolingService.class);
+public class TwitterPoolingService {
+    private final static Log log = LogFactory.getLog(TwitterPoolingService.class);
 
     public static String SEARCH = "#neo4j OR \"graph OR database\" OR \"graph OR databases\" OR graphdb OR graphconnect OR @neoquestions OR @Neo4jDE OR @Neo4jFr OR neotechnology OR springsource OR @SpringData OR pivotal OR @starbuxman OR @mesirii OR @springcentral";
     @Autowired
-    UserRepository userRepository;
+    TweetUserRepository tweetUserRepository;
     @Autowired
-    TagRepository tagRepository;
+    TweetTagRepository tweetTagRepository;
     @Autowired
-    TweetRepository tweetRepository;
+    TweetMessageRepository tweetMessageRepository;
 
     @Autowired
     Session session;
@@ -44,7 +44,7 @@ public class TweetPoolingService {
     @Autowired
     TwitterTemplate twitterTemplate;
 
-    public List<Tweet> importTweets(String search) {
+    public List<TweetMessage> importTweets(String search) {
         return importTweets(search, null);
     }
 
@@ -56,40 +56,40 @@ public class TweetPoolingService {
     }
 
 
-    public List<Tweet> importTweets(String search, Long lastTweetId) {
+    public List<TweetMessage> importTweets(String search, Long lastTweetId) {
         if (log.isInfoEnabled()) log.info("Importing for " + search + ", max tweet id: " + lastTweetId);
 
         final SearchOperations searchOperations = twitterTemplate.searchOperations();
 
         final SearchResults results = lastTweetId == null ? searchOperations.search(search, 200) : searchOperations.search(search, 200, lastTweetId, Long.MAX_VALUE);
 
-        final List<Tweet> result = new ArrayList<Tweet>();
+        final List<TweetMessage> result = new ArrayList<TweetMessage>();
         for (org.springframework.social.twitter.api.Tweet tweet : results.getTweets()) {
             result.add(importTweet(tweet));
         }
         return result;
     }
 
-    protected Tweet importTweet(org.springframework.social.twitter.api.Tweet source) {
-        User user = userRepository.save(new User(source.getUser()));
+    protected TweetMessage importTweet(org.springframework.social.twitter.api.Tweet source) {
+        TweetUser tweetUser = tweetUserRepository.save(new TweetUser(source.getUser()));
         final String text = source.getText();
-        final Tweet tweet = new Tweet(source.getId(), user, text);
-        if (log.isInfoEnabled()) log.info("Imported " + tweet);
-        addMentions(tweet, source.getEntities().getMentions());
-        addTags(tweet, source.getEntities().getHashTags());
-        return tweetRepository.save(tweet);
+        final TweetMessage tweetMessage = new TweetMessage(source.getId(), tweetUser, text);
+        if (log.isInfoEnabled()) log.info("Imported " + tweetMessage);
+        addMentions(tweetMessage, source.getEntities().getMentions());
+        addTags(tweetMessage, source.getEntities().getHashTags());
+        return tweetMessageRepository.save(tweetMessage);
     }
 
 
-    private void addMentions(Tweet tweet, List<MentionEntity> mentions) {
+    private void addMentions(TweetMessage tweetMessage, List<MentionEntity> mentions) {
         for (MentionEntity mention : mentions) {
-            tweet.addMention(userRepository.save(new User(mention.getId(), mention.getName(), mention.getScreenName())));
+            tweetMessage.addMention(tweetUserRepository.save(new TweetUser(mention.getId(), mention.getName(), mention.getScreenName())));
         }
     }
 
-    private void addTags(Tweet tweet, List<HashTagEntity> tags) {
+    private void addTags(TweetMessage tweetMessage, List<HashTagEntity> tags) {
         for (HashTagEntity tag : tags) {
-            tweet.addTag(tagRepository.save(new Tag(tag.getText())));
+            tweetMessage.addTag(tweetTagRepository.save(new TweetTag(tag.getText())));
         }
     }
 
