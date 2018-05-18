@@ -1,5 +1,9 @@
 ## Twitter Trend Analysis Using neo4j
 
+Using neo4j and Spring Social + Spring REST + Spring DATA neo4j, this application shows:
+1. Trending tweets
+2. Recommendation engine (friends recomendations)
+
 ### Instructions to install
 
 1. Install neo4j 
@@ -24,6 +28,12 @@ spring.social.twitter.appSecret=<appId>
 
 **NOTE** Create twitter consumerKey (spring.social.twitter.appId) and consumerSecret (spring.social.twitter.appSecret)
 
+4. Run the application 
+```
+mvn spring-boot:run [-Dtwitter.search="springsource"]
+```
+
+**NOTE** By default there is default neo4j cypher is provided
 
 ### REST Metadata APIs
 ```
