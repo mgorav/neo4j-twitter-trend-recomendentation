@@ -2,7 +2,7 @@
 
 Using neo4j and Spring Social + Spring REST + Spring DATA neo4j, this application shows:
 1. Trending tweets
-2. Recommendation engine (friends recomendations)
+2. Recommendation engine (friend recommendations)
 
 ### Instructions to install
 
