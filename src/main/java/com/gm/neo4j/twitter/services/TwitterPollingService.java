@@ -10,6 +10,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.neo4j.ogm.session.Session;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.social.twitter.api.*;
 import org.springframework.social.twitter.api.impl.TwitterTemplate;
@@ -44,11 +45,6 @@ public class TwitterPollingService {
     TwitterTemplate twitterTemplate;
 
 
-    public List<TweetMessage> searchAndImportTweetsInTwitter(String search) {
-        // This method also search tweets using pagination and store in neo4j
-        return getSearchResults(search, null).getTweets().stream().map(this::importTweet).collect(toList());
-    }
-
     public List<TweetMessage> searchByCypher(String cypher) {
 
         return (List<TweetMessage>) stream(session.query(TweetMessage.class, cypher, EMPTY_MAP).spliterator(), false).collect(toList());
@@ -60,10 +56,10 @@ public class TwitterPollingService {
         if (log.isInfoEnabled()) {
             log.info("Importing Tweets for " + search);
         }
-        searchAndImportTweetsInTwitter(search);
+        searchAndImportTweetsInTwitter(search, null);
     }
 
-
+    @Async
     public List<TweetMessage> searchAndImportTweetsInTwitter(String search, Long lastTweetId) {
         if (log.isInfoEnabled()) {
             log.info("Importing for " + search + ", max tweet id: " + lastTweetId);

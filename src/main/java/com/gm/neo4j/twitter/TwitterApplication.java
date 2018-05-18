@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.neo4j.repository.config.EnableNeo4jRepositories;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.social.twitter.api.impl.TwitterTemplate;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -18,6 +19,7 @@ import java.io.IOException;
 @EnableNeo4jRepositories(basePackageClasses = TweetMessageRepository.class)
 @EnableTransactionManagement
 @EnableScheduling
+@EnableAsync
 @Configuration
 @EnableAutoConfiguration(exclude = TwitterAutoConfiguration.class)
 @ComponentScan("com.gm.neo4j.twitter")
