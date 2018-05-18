@@ -1,7 +1,7 @@
-package com.gm.neo4j.twitter;
+package com.gm.neo4j.twitter.controller;
 
 import com.gm.neo4j.twitter.domain.TweetMessage;
-import com.gm.neo4j.twitter.services.TwitterPollingService;
+import com.gm.neo4j.twitter.services.TwitterService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,21 +10,21 @@ import java.util.List;
 @RequestMapping(value = "/tweets")
 public class TwitterController {
 
-    private final TwitterPollingService twitterPollingService;
+    private final TwitterService service;
 
-    public TwitterController(TwitterPollingService twitterPollingService) {
-        this.twitterPollingService = twitterPollingService;
+    public TwitterController(TwitterService service) {
+        this.service = service;
     }
 
     @PostMapping("/importweets")
     void searchAndImport(@RequestParam("search") String search, @RequestParam("tweetId") Long tweetId) {
 
-        twitterPollingService.searchAndImportTweetsInTwitter(search, tweetId);
+        service.searchAndImportTweetsInTwitter(search, tweetId);
     }
 
     @GetMapping("/trend")
     List<TweetMessage> searchByCypher(@RequestParam("cypher") String cypher) {
 
-        return twitterPollingService.searchByCypher(cypher);
+        return service.searchByCypher(cypher);
     }
 }

@@ -27,6 +27,8 @@ import java.io.IOException;
 public class TwitterApplication {
     private String appId;
     private String appSecret;
+    private String accessToken;
+    private String accessTokenSecret;
 
     public static void main(String[] args) throws IOException {
         SpringApplication.run(TwitterApplication.class, args);
@@ -34,7 +36,7 @@ public class TwitterApplication {
 
     @Bean
     public TwitterTemplate twitterTemplate() {
-        return new TwitterTemplate(appId, appSecret);
+        return new TwitterTemplate(appId, appSecret,accessToken,accessTokenSecret);
     }
 
     public String getAppId() {
@@ -52,4 +54,22 @@ public class TwitterApplication {
     public void setAppSecret(String appSecret) {
         this.appSecret = appSecret;
     }
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
+
+    public String getAccessTokenSecret() {
+        return accessTokenSecret;
+    }
+
+    public void setAccessTokenSecret(String accessTokenSecret) {
+        this.accessTokenSecret = accessTokenSecret;
+    }
 }
+
+
