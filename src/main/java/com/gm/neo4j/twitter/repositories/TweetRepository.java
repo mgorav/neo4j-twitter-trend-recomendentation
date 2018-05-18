@@ -11,4 +11,6 @@ public interface TweetRepository extends PagingAndSortingRepository<Tweet, Long>
     Tweet findByTweetId(Long id);
 
     Collection<Tweet> findByTagsTag(String tag);
+
+    Collection<Tweet> twitterTrend(String query);
 }
