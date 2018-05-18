@@ -9,6 +9,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.neo4j.ogm.annotation.Relationship.INCOMING;
+
 @NodeEntity
 public class TweetMessage {
     @GraphId
@@ -18,7 +20,7 @@ public class TweetMessage {
 
     String text;
 
-     @Relationship(type="POSTED", direction = Relationship.INCOMING)
+     @Relationship(type="POSTED", direction = INCOMING)
      TweetUser poster;
      @Relationship(type="TAGGED")   Collection<TweetTag> tags=new HashSet<TweetTag>();
      @Relationship(type="MENTIONS") Set<TweetUser> mentions=new HashSet<TweetUser>();
