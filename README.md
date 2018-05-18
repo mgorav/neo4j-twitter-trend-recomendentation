@@ -45,6 +45,10 @@ http://localhost:5050/tags
 
 All set to run the twitter trend APIS
 
+neo4j will depicts graphs as:
+
+  ![alt text](./neo4j.png)
+
 
     
     
