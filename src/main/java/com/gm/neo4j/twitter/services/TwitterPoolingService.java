@@ -17,10 +17,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Collections.EMPTY_MAP;
+import static java.util.stream.Collectors.toList;
 
 @Service
 @Transactional
@@ -64,11 +64,8 @@ public class TwitterPoolingService {
 
         final SearchResults results = lastTweetId == null ? searchOperations.search(search, 100) : searchOperations.search(search, 200, lastTweetId, Long.MAX_VALUE);
 
-        final List<TweetMessage> result = new ArrayList<TweetMessage>();
-        for (Tweet tweet : results.getTweets()) {
-            result.add(importTweet(tweet));
-        }
-        return result;
+        return results.getTweets().stream().map(this::importTweet).collect(toList());
+
     }
 
     protected TweetMessage importTweet(Tweet source) {
