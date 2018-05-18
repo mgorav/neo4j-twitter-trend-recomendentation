@@ -20,9 +20,10 @@ public class TwitterController {
     }
 
     @GetMapping("/importweets")
-    List<TweetMessage> search(@RequestParam("search") String search) {
+    List<TweetMessage> searchAndImport(@RequestParam("search") String search,@RequestParam("tweetId") Long tweetId ) {
 
-        return twitterPollingService.searchAndImportTweetsInTwitter(search);
+        return tweetId == null ? twitterPollingService.searchAndImportTweetsInTwitter(search) :
+                twitterPollingService.searchAndImportTweetsInTwitter(search,tweetId) ;
     }
 
     @GetMapping("/trend")

@@ -51,7 +51,7 @@ public class TwitterPollingService {
 
     public List<TweetMessage> searchByCypher(String cypher) {
 
-        return (List<TweetMessage>) stream(session.query(TweetMessage.class,cypher,EMPTY_MAP).spliterator(), false).collect(toList());
+        return (List<TweetMessage>) stream(session.query(TweetMessage.class, cypher, EMPTY_MAP).spliterator(), false).collect(toList());
     }
 
     @Scheduled(initialDelay = 10 * 1000, fixedRate = 30 * 1000)
@@ -62,7 +62,7 @@ public class TwitterPollingService {
     }
 
 
-    public List<TweetMessage> doScheduleImportTweets(String search, Long lastTweetId) {
+    public List<TweetMessage> searchAndImportTweetsInTwitter(String search, Long lastTweetId) {
         if (log.isInfoEnabled()) log.info("Importing for " + search + ", max tweet id: " + lastTweetId);
 
         final SearchResults results = getSearchResults(search, lastTweetId);
