@@ -21,13 +21,14 @@ import java.util.List;
 
 import static java.util.Collections.EMPTY_MAP;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.StreamSupport.stream;
 
 @Service
 @Transactional
-public class TwitterPoolingService {
-    private final static Log log = LogFactory.getLog(TwitterPoolingService.class);
+public class TwitterPollingService {
+    private final static Log log = LogFactory.getLog(TwitterPollingService.class);
 
-    public String SEARCH = "#neo4j OR \"graph OR database\" OR \"graph OR databases\" OR graphdb OR graphconnect OR @neoquestions OR @Neo4jDE OR @Neo4jFr OR neotechnology OR springsource OR @SpringData OR pivotal OR @starbuxman OR @mesirii OR @springcentral";
+    public String TWITTER_SEARCH = "#neo4j OR \"graph OR database\" OR \"graph OR databases\" OR graphdb OR graphconnect OR @neoquestions OR @Neo4jDE OR @Neo4jFr OR neotechnology OR springsource OR @SpringData OR pivotal OR @starbuxman OR @mesirii OR @springcentral";
     @Autowired
     TweetUserRepository tweetUserRepository;
     @Autowired
@@ -38,34 +39,42 @@ public class TwitterPoolingService {
     @Autowired
     Session session;
 
+
     @Autowired
     TwitterTemplate twitterTemplate;
 
-    public List<TweetMessage> searchTweets(String search) {
-        // NOT elegant
-        synchronized (this) {
-            SEARCH = search;
-        }
-        return searchTweets(search, null);
+
+    public List<TweetMessage> searchAndImportTweetsInTwitter(String search) {
+        // This method also search tweets using pagination and store in neo4j
+        return getSearchResults(search, null).getTweets().stream().map(this::importTweet).collect(toList());
+    }
+
+    public List<TweetMessage> searchByCypher(String cypher) {
+
+        return (List<TweetMessage>) stream(session.query(TweetMessage.class,cypher,EMPTY_MAP).spliterator(), false).collect(toList());
     }
 
     @Scheduled(initialDelay = 10 * 1000, fixedRate = 30 * 1000)
-    public void importTweets() {
-        String search = System.getProperty("gm.twitter.search", SEARCH);
+    public void scheduleImportTweets() {
+        String search = System.getProperty("gm.twitter.search", TWITTER_SEARCH);
         if (log.isInfoEnabled()) log.info("Importing Tweets for " + search);
-        searchTweets(search);
+        searchAndImportTweetsInTwitter(search);
     }
 
 
-    public List<TweetMessage> searchTweets(String search, Long lastTweetId) {
+    public List<TweetMessage> doScheduleImportTweets(String search, Long lastTweetId) {
         if (log.isInfoEnabled()) log.info("Importing for " + search + ", max tweet id: " + lastTweetId);
 
-        final SearchOperations searchOperations = twitterTemplate.searchOperations();
-
-        final SearchResults results = lastTweetId == null ? searchOperations.search(search, 100) : searchOperations.search(search, 200, lastTweetId, Long.MAX_VALUE);
+        final SearchResults results = getSearchResults(search, lastTweetId);
 
         return results.getTweets().stream().map(this::importTweet).collect(toList());
 
+    }
+
+    private SearchResults getSearchResults(String search, Long lastTweetId) {
+        final SearchOperations searchOperations = twitterTemplate.searchOperations();
+
+        return lastTweetId == null ? searchOperations.search(search, 100) : searchOperations.search(search, 200, lastTweetId, Long.MAX_VALUE);
     }
 
     protected TweetMessage importTweet(Tweet source) {
@@ -95,4 +104,5 @@ public class TwitterPoolingService {
     public void postConstruct() {
         session.query("MATCH (n) OPTIONAL MATCH (n)-[r]-() DELETE n,r", EMPTY_MAP);
     }
+
 }
