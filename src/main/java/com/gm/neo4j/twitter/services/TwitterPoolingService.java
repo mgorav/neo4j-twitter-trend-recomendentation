@@ -58,7 +58,7 @@ public class TwitterPoolingService {
 
         final SearchOperations searchOperations = twitterTemplate.searchOperations();
 
-        final SearchResults results = lastTweetId == null ? searchOperations.search(search, 200) : searchOperations.search(search, 200, lastTweetId, Long.MAX_VALUE);
+        final SearchResults results = lastTweetId == null ? searchOperations.search(search, 100) : searchOperations.search(search, 200, lastTweetId, Long.MAX_VALUE);
 
         final List<TweetMessage> result = new ArrayList<TweetMessage>();
         for (Tweet tweet : results.getTweets()) {
