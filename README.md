@@ -63,7 +63,7 @@ To find trending tweets use API:
 http://localhost:5050/tweets/trend
 ```
 
-neo4j will depicts tweets in graphs as:
+neo4j will depict tweets as graphs shown below:
 
   ![alt text](./neo4j.png)
 
