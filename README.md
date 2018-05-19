@@ -1,8 +1,16 @@
 ## Twitter Trend Analysis Using neo4j
 
-Using neo4j and Spring Social + Spring REST + Spring DATA neo4j, this application shows:
-1. Trending tweets
-2. Recommendation engine (friend recommendations)
+Paradigm shift from relational to graph based modelling in my opinion is the future of domain modelling and is a natural fit for domain driven design. It also facilitates real time data analytics,machine learning & artificial intelligence. The shift is difficult as for years tables are in mind - forget tables!! :-) & give graph DB a chance. Check out following project build using neo4j + Spring REST + Spring data neo4j + Spring Social. The application aims to:
+1) analyse tweets trend using live twitter stream
+2) provide recommendations. 
+3) demonstrate ACID behaviour of neo4j & no sql querying using cypher (neo4j QL based open [opencypher](http://opencypher.org).
+
+Graph based database can be of great asset in the field of payment services, financial services, health insurance, IoT, fraud.... 
+ - as the graph based modelling is simple for complex requirements (white board drawing can be translated to graph model), 
+- is performant (no need to think about intersection tables,joins, indexes etc), 
+- is fast querying using cypher , dynamic evolving (in relational terminology, columns/attributes can be added at will), 
+- is scalable, 
+- fast & complex querying without multiple joins & intersection table
 
 ### Instructions to install
 
