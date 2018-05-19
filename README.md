@@ -45,7 +45,7 @@ gm.twitter.live.stream=false
 
 4. Run the application 
 ```
-mvn spring-boot:run [-Dgm.twitter.search="springsource"]
+mvn spring-boot:run [-Dgm.twitter.search="twitter query"]
 ```
 
 **NOTE** By default there is default neo4j cypher is provided
